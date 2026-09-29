@@ -56,15 +56,15 @@ export const ScratchReveal: React.FC<ScratchRevealProps> = ({
     ctx.fillStyle = '#5A3E11';
     ctx.font = 'bold 15px Cinzel, serif';
     ctx.textAlign = 'center';
-    ctx.fillText('A DATE TO REMEMBER', width / 2, height / 2 - 20);
+    ctx.fillText('SACRED WEDDING DATE', width / 2, height / 2 - 22);
 
-    ctx.font = 'bold 12px Cinzel, serif';
-    ctx.fillStyle = '#483009';
-    ctx.fillText('SCRATCH TO REVEAL', width / 2, height / 2 + 5);
+    ctx.font = 'bold 14px Cinzel, serif';
+    ctx.fillStyle = '#3E2405';
+    ctx.fillText('SCRATCH TO REVEAL NIKAH', width / 2, height / 2 + 5);
 
-    ctx.font = 'italic 11px Cormorant Garamond, serif';
-    ctx.fillStyle = '#3A2405';
-    ctx.fillText('Touch & scrape the heart to reveal Nikah date', width / 2, height / 2 + 28);
+    ctx.font = 'italic 12px Cormorant Garamond, serif';
+    ctx.fillStyle = '#4D3008';
+    ctx.fillText('Touch & scratch to reveal 05 December Nikah date', width / 2, height / 2 + 28);
 
     setScratchPercent(0);
   }, []);
@@ -210,36 +210,36 @@ export const ScratchReveal: React.FC<ScratchRevealProps> = ({
                 clipPath: "url('#wedding-heart-clip')",
               }}
             >
-              <span className="font-amiri text-lg text-[#996515] mb-0.5">
-                بِسْمِ اللَّهِ · عَقْدُ الْقِرَانِ
+              <span className="font-amiri text-lg text-[#996515] leading-tight mb-0.5">
+                عَقْدُ الْقِرَانِ الْمُبَارَك
               </span>
               <span className="text-[10px] tracking-[0.25em] font-cinzel uppercase text-[#8C6D3B] font-bold">
-                AUSPICIOUS NIKAH CEREMONY
+                SACRED NIKAH CEREMONY
               </span>
 
-              {/* The Revealed 05 DECEMBER Date */}
-              <h3 className="font-cinzel text-2xl sm:text-3xl font-extrabold text-[#2C1D12] tracking-wider my-0.5">
-                05 DECEMBER
-              </h3>
+              {/* The Revealed 05 DECEMBER Date (Huge and Prominent) */}
+              <div className="my-1 py-0.5 px-3 rounded-xl bg-[#FAF5EB] border border-[#D4AF37]/50">
+                <h3 className="font-cinzel text-2xl sm:text-3xl font-extrabold text-[#2C1D12] tracking-wider">
+                  05 DECEMBER 2026
+                </h3>
+              </div>
 
-              <div className="w-16 h-px bg-[#D4AF37] my-1" />
-
-              <h4 className="font-cinzel text-sm sm:text-base font-bold text-[#996515] tracking-wider uppercase">
+              <h4 className="font-cinzel text-xs sm:text-sm font-bold text-[#996515] tracking-widest uppercase mt-0.5">
                 BARAAT & NIKAH
               </h4>
 
-              <div className="text-[11px] font-cinzel font-semibold text-[#5C4A3A] mt-1 space-y-0.5">
-                <p>BARAAT: 12:00 PM NOON</p>
-                <p>NIKAH: 4:00 PM EVENING</p>
+              <div className="text-[11px] font-cinzel font-semibold text-[#5C4A3A] mt-1 space-y-0.5 bg-[#FAF7F2] px-3 py-1 rounded-lg border border-[#EFE5D3]">
+                <p>✦ BARAAT: 12:00 PM NOON</p>
+                <p>✦ NIKAH: 4:00 PM EVENING</p>
               </div>
 
-              <p className="font-cinzel text-[10px] tracking-wider text-[#786552] mt-1 font-medium">
+              <p className="font-cinzel text-[10px] tracking-wider text-[#786552] mt-1.5 font-medium">
                 THE ROYAL IMPERIAL PALACE · NEHTOUR
               </p>
 
               <div className="mt-2 flex items-center gap-1.5 text-[9px] font-cinzel tracking-widest text-[#996515] font-bold uppercase">
                 <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-                <span>Nikah Festivities Unlocked</span>
+                <span>05 Dec Nikah Date Unlocked</span>
                 <Sparkles className="w-3 h-3 text-[#D4AF37]" />
               </div>
             </div>

@@ -29,36 +29,56 @@ export const CoupleGallery: React.FC = () => {
       id="gallery"
       className="py-20 md:py-28 relative bg-[#F7F3EB]/70 border-t border-[#E8DFC8]"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 35 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-6xl mx-auto px-4 sm:px-6"
-      >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 mb-2">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="inline-flex items-center gap-2 mb-2"
+          >
             <span className="w-8 h-px bg-[#C59A3F]" />
             <span className="font-cinzel text-xs uppercase tracking-[0.25em] text-[#996515] font-semibold">
               Sacred Portraits & Milestones
             </span>
             <span className="w-8 h-px bg-[#C59A3F]" />
-          </div>
+          </motion.div>
 
-          <h2 className="font-cinzel text-3xl sm:text-5xl font-bold tracking-tight text-[#3A291A] mb-3">
+          <motion.h2
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cinzel text-3xl sm:text-5xl font-bold tracking-tight text-[#3A291A] mb-3"
+          >
             Javed & Roshan
-          </h2>
-          <p className="font-cormorant italic text-base sm:text-lg text-[#665443]">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="font-cormorant italic text-base sm:text-lg text-[#665443]"
+          >
             “And We created you in pairs” — artistic reflections of grace, devotion, and cherished beginnings.
-          </p>
+          </motion.p>
         </div>
 
         {/* 3 Mughal Arch Framed Photo Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {COUPLE_GALLERY_ITEMS.map((item, idx) => (
-            <div
+            <motion.div
               key={item.id}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.85,
+                delay: idx * 0.16,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               onClick={() => setSelectedIndex(idx)}
               className="cursor-pointer group relative rounded-3xl bg-white border border-[#E2D2B5] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
             >
@@ -112,10 +132,10 @@ export const CoupleGallery: React.FC = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Lightbox / Full-Screen Interactive View with Prev / Next Navigation */}
       {currentItem && selectedIndex !== null && (

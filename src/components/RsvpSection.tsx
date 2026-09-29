@@ -105,34 +105,52 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ onShowerPetals }) => {
 
   return (
     <section id="rsvp" className="py-20 md:py-28 relative bg-[#FAF7F2] border-t border-[#E8DFC8]">
-      <motion.div
-        initial={{ opacity: 0, y: 35 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-4xl mx-auto px-4 sm:px-6"
-      >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         {/* Section Header with Exact Prompts */}
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 mb-3">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="inline-flex items-center gap-2 mb-3"
+          >
             <span className="w-8 h-px bg-[#C59A3F]" />
             <span className="font-cinzel text-xs uppercase tracking-[0.25em] text-[#996515] font-semibold">
               Presence & Blessings
             </span>
             <span className="w-8 h-px bg-[#C59A3F]" />
-          </div>
+          </motion.div>
 
-          <h2 className="font-cinzel text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#3A291A] uppercase mb-3">
+          <motion.h2
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cinzel text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#3A291A] uppercase mb-3"
+          >
             YOUR PRESENCE IS OUR GREATEST BLESSING
-          </h2>
+          </motion.h2>
 
-          <p className="font-cormorant italic text-lg sm:text-xl text-[#786552]">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="font-cormorant italic text-lg sm:text-xl text-[#786552]"
+          >
             “WE WOULD BE HONOURED TO HAVE YOU WITH US”
-          </p>
+          </motion.p>
         </div>
 
         {/* Form Container */}
-        <div className="relative rounded-3xl bg-white border border-[#E2D2B5] p-6 sm:p-10 md:p-12 shadow-[0_20px_50px_-15px_rgba(200,162,81,0.18)]">
+        <motion.div
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="relative rounded-3xl bg-white border border-[#E2D2B5] p-6 sm:p-10 md:p-12 shadow-[0_20px_50px_-15px_rgba(200,162,81,0.18)]"
+        >
           {isSubmitted ? (
             /* Confirmation View */
             <div className="text-center py-6">
@@ -353,23 +371,39 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ onShowerPetals }) => {
               </div>
             </form>
           )}
-        </div>
+        </motion.div>
 
         {/* Guestbook Du'as Section */}
         <div className="mt-16">
           <div className="text-center mb-8">
-            <span className="font-cinzel text-xs uppercase tracking-widest text-[#996515] font-semibold">
+            <motion.span
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="font-cinzel text-xs uppercase tracking-widest text-[#996515] font-semibold"
+            >
               Words of Devotion
-            </span>
-            <h3 className="font-cinzel text-2xl font-bold text-[#3A291A] mt-1">
+            </motion.span>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="font-cinzel text-2xl font-bold text-[#3A291A] mt-1"
+            >
               Guest Prayers & Du’as
-            </h3>
+            </motion.h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {guestbook.map((entry, idx) => (
-              <div
+              <motion.div
                 key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: idx * 0.15 }}
                 className="p-5 rounded-2xl bg-white/80 border border-[#E8DFC8] flex flex-col justify-between shadow-xs"
               >
                 <p className="font-cormorant italic text-sm text-[#4A3B2C] leading-relaxed mb-4">
@@ -379,11 +413,11 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({ onShowerPetals }) => {
                   <span className="font-bold text-[#3A291A] truncate">{entry.guestName}</span>
                   <span className="text-[10px] text-[#A89887]">{entry.time}</span>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

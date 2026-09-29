@@ -101,19 +101,19 @@ export const Navigation: React.FC<NavigationProps> = ({
           {/* Music Play/Pause Toggle */}
           <button
             onClick={onToggleMusic}
-            aria-label={isPlayingMusic ? 'Mute background instrumental music' : 'Play background instrumental music'}
-            className="h-9 px-3 rounded-lg border border-[#D4AF37]/60 bg-[#FAF5EB] hover:bg-[#F3EAD8] text-[#5C3B0E] text-xs font-cinzel tracking-wider flex items-center gap-2 transition-all active:scale-95"
-            title="Arabic & South Asian Instrumental Music"
+            aria-label={isPlayingMusic ? 'Mute background wedding music' : 'Play background wedding music'}
+            className="h-9 px-3 rounded-lg border border-[#D4AF37]/60 bg-[#FAF5EB] hover:bg-[#F3EAD8] text-[#5C3B0E] text-xs font-cinzel tracking-wider flex items-center gap-2 transition-all active:scale-95 shadow-xs"
+            title="Soft Calm Wedding Instrumental Music"
           >
             {isPlayingMusic ? (
               <>
                 <Volume2 className="w-4 h-4 text-[#C59A3F] animate-pulse" />
-                <span className="hidden sm:inline font-medium">Oud Melody</span>
+                <span className="hidden sm:inline font-medium">Wedding Music</span>
               </>
             ) : (
               <>
                 <VolumeX className="w-4 h-4 text-[#8C6D3B]" />
-                <span className="hidden sm:inline">Play Melody</span>
+                <span className="hidden sm:inline">Play Music</span>
               </>
             )}
           </button>

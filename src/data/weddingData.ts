@@ -30,6 +30,7 @@ export const WEDDING_DATA = {
     name: 'JAVED ANSARI',
     parentLine: 'SON OF FAROOK ANSARI',
     brothers: ['Shadab Ahmad', 'Danish Ansari'],
+    brothersInLaw: ['Sakib Ansari', 'Gufran Ansari'],
     paternalFamily: [
       'Idris Ahmad',
       'Khurshid Ahmad',

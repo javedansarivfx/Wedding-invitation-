@@ -38,34 +38,52 @@ export const EventsSection: React.FC<EventsSectionProps> = ({
         />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 35 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-6xl mx-auto px-4 sm:px-6"
-      >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 mb-2">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="inline-flex items-center gap-2 mb-2"
+          >
             <span className="w-8 h-px bg-[#C59A3F]" />
             <span className="font-cinzel text-xs uppercase tracking-[0.25em] text-[#996515] font-semibold">
               The Wedding Schedule
             </span>
             <span className="w-8 h-px bg-[#C59A3F]" />
-          </div>
+          </motion.div>
 
-          <h2 className="font-cinzel text-3xl sm:text-5xl font-bold tracking-tight text-[#3A291A] mb-3">
+          <motion.h2
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cinzel text-3xl sm:text-5xl font-bold tracking-tight text-[#3A291A] mb-3"
+          >
             Celebration of Events
-          </h2>
-          <p className="font-cormorant italic text-base sm:text-lg text-[#665443]">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="font-cormorant italic text-base sm:text-lg text-[#665443]"
+          >
             Every ceremony is a tapestry of family warmth, sacred tradition, and heartfelt du’as.
-          </p>
+          </motion.p>
         </div>
 
         {!isRevealed ? (
           /* Locked State if date hasn't been scratched yet */
-          <div className="max-w-md mx-auto p-8 rounded-3xl bg-white border border-[#E2D2B5] text-center shadow-md">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-md mx-auto p-8 rounded-3xl bg-white border border-[#E2D2B5] text-center shadow-md"
+          >
             <Sparkles className="w-8 h-8 text-[#C59A3F] mx-auto mb-3 animate-pulse" />
             <h3 className="font-cinzel text-lg font-bold text-[#3A291A] mb-2">
               Event Dates Locked
@@ -79,7 +97,7 @@ export const EventsSection: React.FC<EventsSectionProps> = ({
             >
               Go to Scratch Reveal
             </button>
-          </div>
+          </motion.div>
         ) : (
           /* Unlocked Event Schedule Cards (04 Dec, 05 Dec, 06 Dec) */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
@@ -87,8 +105,16 @@ export const EventsSection: React.FC<EventsSectionProps> = ({
               const isGrandest = event.id === 'nikah';
 
               return (
-                <div
+                <motion.div
                   key={event.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    duration: 0.85,
+                    delay: index * 0.18,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                   className={`relative rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 group ${
                     isGrandest
                       ? 'bg-gradient-to-b from-[#FFFDF8] via-white to-[#FAF6EE] border-2 border-[#D4AF37] shadow-[0_20px_50px_-10px_rgba(200,162,81,0.28)] lg:-translate-y-2'
@@ -197,12 +223,12 @@ export const EventsSection: React.FC<EventsSectionProps> = ({
                     <Calendar className="w-3.5 h-3.5 text-[#996515]" />
                     <span>Save {event.dateStr} to Calendar</span>
                   </button>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         )}
-      </motion.div>
+      </div>
     </section>
   );
 };

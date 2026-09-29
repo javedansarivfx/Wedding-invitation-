@@ -21,13 +21,7 @@ export const GroomFamilySection: React.FC = () => {
         />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 35 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-4xl mx-auto px-4 sm:px-6 relative"
-      >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative">
         {/* Botanical Paper Frame Container with Classical Column Silhouette */}
         <div className="rounded-3xl bg-[#FFFDF9] border border-[#E2D2B5] p-8 sm:p-12 shadow-[0_15px_40px_-10px_rgba(200,162,81,0.15)] text-center relative">
           {/* Subtle Corner Gold Brackets */}
@@ -37,31 +31,65 @@ export const GroomFamilySection: React.FC = () => {
           <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-[#D4AF37]/50 rounded-br-lg pointer-events-none" />
 
           {/* Section Heading */}
-          <div className="inline-flex items-center gap-2 mb-3">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="inline-flex items-center gap-2 mb-3"
+          >
             <Users className="w-4 h-4 text-[#C59A3F]" />
             <span className="font-cinzel text-xs uppercase tracking-[0.25em] text-[#996515] font-semibold">
               Groom's Esteemed Family
             </span>
             <Users className="w-4 h-4 text-[#C59A3F]" />
-          </div>
+          </motion.div>
 
           {/* 1. JAVED ANSARI */}
-          <h2 className="font-cinzel text-3xl sm:text-5xl font-bold tracking-tight text-[#3A291A] mb-1">
+          <motion.h2
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cinzel text-3xl sm:text-5xl font-bold tracking-tight text-[#3A291A] mb-1"
+          >
             {groom.name}
-          </h2>
+          </motion.h2>
 
           {/* 2. SON OF FAROOK ANSARI */}
-          <p className="font-cinzel text-sm sm:text-base font-semibold tracking-[0.2em] text-[#996515] uppercase mb-8">
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cinzel text-sm sm:text-base font-semibold tracking-[0.2em] text-[#996515] uppercase mb-8"
+          >
             {groom.parentLine}
-          </p>
+          </motion.p>
 
-          <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#C59A3F] to-transparent mx-auto mb-8" />
+          <motion.div
+            initial={{ opacity: 0, scaleX: 0 }}
+            whileInView={{ opacity: 1, scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="w-20 h-px bg-gradient-to-r from-transparent via-[#C59A3F] to-transparent mx-auto mb-8"
+          />
 
-          {/* 3. BROTHERS (Strictly before Paternal Family) */}
-          <div className="max-w-md mx-auto mb-10 p-5 rounded-2xl bg-[#FAF5EB] border border-[#E8DFC8]">
-            <h3 className="font-cinzel text-xs font-bold uppercase tracking-[0.25em] text-[#5C3B0E] mb-3">
-              BROTHERS
-            </h3>
+          {/* 3. BROTHERS */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-md mx-auto mb-5 p-5 rounded-2xl bg-[#FAF5EB] border border-[#E8DFC8]"
+          >
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <span className="w-6 h-px bg-[#C59A3F]/50" />
+              <h3 className="font-cinzel text-xs font-bold uppercase tracking-[0.25em] text-[#5C3B0E]">
+                GROOM'S BROTHERS
+              </h3>
+              <span className="w-6 h-px bg-[#C59A3F]/50" />
+            </div>
             <div className="space-y-1.5">
               {groom.brothers.map((brother, idx) => (
                 <p
@@ -72,10 +100,43 @@ export const GroomFamilySection: React.FC = () => {
                 </p>
               ))}
             </div>
-          </div>
+          </motion.div>
+
+          {/* 3.1 BROTHERS-IN-LAW (Sakib Ansari & Gufran Ansari) */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-md mx-auto mb-8 p-5 rounded-2xl bg-[#FAF5EB] border-2 border-[#D4AF37]/50 shadow-xs"
+          >
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <span className="w-6 h-px bg-[#C59A3F]/50" />
+              <h3 className="font-cinzel text-xs font-bold uppercase tracking-[0.25em] text-[#996515]">
+                BROTHERS-IN-LAW
+              </h3>
+              <span className="w-6 h-px bg-[#C59A3F]/50" />
+            </div>
+            <div className="space-y-1.5">
+              {groom.brothersInLaw.map((bil, idx) => (
+                <p
+                  key={idx}
+                  className="font-cinzel text-base sm:text-lg font-bold text-[#3A291A] tracking-wide"
+                >
+                  {bil}
+                </p>
+              ))}
+            </div>
+          </motion.div>
 
           {/* 4. PATERNAL FAMILY (Strictly separated) */}
-          <div className="max-w-md mx-auto p-6 rounded-2xl bg-white border border-[#E8DFC8] shadow-xs">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.85, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-md mx-auto p-6 rounded-2xl bg-white border border-[#E8DFC8] shadow-xs"
+          >
             <h3 className="font-cinzel text-xs font-bold uppercase tracking-[0.25em] text-[#8C6D3B] mb-4">
               PATERNAL FAMILY
             </h3>
@@ -92,9 +153,9 @@ export const GroomFamilySection: React.FC = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

@@ -3,427 +3,318 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles } from 'lucide-react';
 import { royalAudio } from '../utils/audio';
 
+// Reference image matching user's screenshot
+import burgundyDoorImg from '../assets/images/royal_burgundy_door_1790696646563.jpg';
+
 interface EnvelopeExperienceProps {
   onOpened: () => void;
+  onDoorsOpening?: () => void;
   isOpen: boolean;
 }
 
 export const EnvelopeExperience: React.FC<EnvelopeExperienceProps> = ({
   onOpened,
+  onDoorsOpening,
   isOpen,
 }) => {
-  // Sequence stages:
-  // 'idle' -> 'screen_darkening' -> 'golden_pulsing' -> 'seal_glowing' -> 'seal_cracking' -> 'flap_opening' -> 'card_emerging' -> 'complete'
+  // Animation stages:
+  // 'idle' -> 'light_orbit' (smooth light travels around the button at medium speed)
+  //        -> 'doors_opening' (doors swing open slowly & majestically like royal palace doors)
+  //        -> 'complete'
   const [animStage, setAnimStage] = useState<
-    | 'idle'
-    | 'screen_darkening'
-    | 'golden_pulsing'
-    | 'seal_glowing'
-    | 'seal_cracking'
-    | 'flap_opening'
-    | 'card_emerging'
-    | 'complete'
+    'idle' | 'light_orbit' | 'doors_opening' | 'complete'
   >('idle');
-
-  const [pulseCount, setPulseCount] = useState(0);
 
   const handleTapSeal = () => {
     if (animStage !== 'idle') return;
 
-    // Step 1: Screen slightly darkens
-    setAnimStage('screen_darkening');
+    // Step 1: Smooth light travels at medium speed around the button (~1.5s)
+    setAnimStage('light_orbit');
+    royalAudio.playLightTravelChime();
 
-    // Step 2 & 3: Soft golden light pulses 3 times behind envelope
+    // Step 2: Once light completes orbit, doors open SLOWLY and MAJESTICALLY ("slow slow open hona chahiye")
     setTimeout(() => {
-      setAnimStage('golden_pulsing');
-      setPulseCount(1);
-    }, 450);
-
-    setTimeout(() => {
-      setPulseCount(2);
-    }, 1100);
-
-    setTimeout(() => {
-      setPulseCount(3);
-    }, 1750);
-
-    // Step 6 & 7: Seal catches light and glows subtly + rim light
-    setTimeout(() => {
-      setAnimStage('seal_glowing');
-    }, 2400);
-
-    // Step 9 & 10: Wax seal gently cracks (sound effect + particles)
-    setTimeout(() => {
+      setAnimStage('doors_opening');
+      if (onDoorsOpening) {
+        onDoorsOpening();
+      }
+      royalAudio.playDoorOpenSound();
       royalAudio.playWaxSealCrack();
-      setAnimStage('seal_cracking');
-    }, 3100);
-
-    // Step 11 & 12: Envelope flap begins opening slowly with warm golden light from inside
-    setTimeout(() => {
-      setAnimStage('flap_opening');
-    }, 3700);
-
-    // Step 13 & 14: Invitation card emerges & unfolds
-    setTimeout(() => {
-      setAnimStage('card_emerging');
       royalAudio.start();
-    }, 4500);
+    }, 1500);
 
-    // Step 17: Smooth cinematic transition into main invitation
+    // Step 3: Once doors have slowly swung wide open, cleanly complete transition (4.2s total)
     setTimeout(() => {
       setAnimStage('complete');
       onOpened();
-    }, 6200);
+    }, 4500);
+  };
+
+  const handleSkipDirectly = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    royalAudio.start();
+    setAnimStage('complete');
+    if (onDoorsOpening) onDoorsOpening();
+    onOpened();
   };
 
   if (isOpen && animStage === 'complete') {
     return null;
   }
 
-  const isPulsing = animStage === 'golden_pulsing';
-  const isGlowing = animStage === 'seal_glowing' || animStage === 'seal_cracking';
-  const isFlapOpen =
-    animStage === 'flap_opening' ||
-    animStage === 'card_emerging' ||
-    animStage === 'complete';
-  const isCardEmerging =
-    animStage === 'card_emerging' || animStage === 'complete';
+  const isLightOrbiting = animStage === 'light_orbit';
+  const isDoorsOpening =
+    animStage === 'doors_opening' || animStage === 'complete';
 
   return (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 1 }}
         animate={{
-          opacity: 1,
-          backgroundColor:
-            animStage === 'idle'
-              ? 'rgba(250, 247, 242, 1)'
-              : 'rgba(28, 20, 14, 0.94)',
+          opacity: animStage === 'complete' ? 0 : 1,
         }}
-        exit={{ opacity: 0, transition: { duration: 1.2 } }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden select-none"
+        exit={{ opacity: 0, transition: { duration: 0.8 } }}
+        className="fixed inset-0 z-50 w-screen h-screen overflow-hidden select-none pointer-events-auto"
+        style={{ perspective: 1800 }}
       >
-        {/* Step 1 & 2: Volumetric Golden Aura behind envelope */}
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          {/* Base ambient paper texture */}
-          <div
-            className="absolute inset-0 opacity-40"
-            style={{
-              backgroundImage:
-                'radial-gradient(rgba(200, 162, 81, 0.12) 1px, transparent 1px)',
-              backgroundSize: '20px 20px',
-            }}
+        {/* ======================================================== */}
+        {/* 1. LEFT DOOR PANEL (Slow, stately, majestic swing open)  */}
+        {/* ======================================================== */}
+        <motion.div
+          style={{
+            transformOrigin: 'left center',
+            transformStyle: 'preserve-3d',
+          }}
+          animate={
+            isDoorsOpening
+              ? {
+                  rotateY: -118,
+                  x: '-12%',
+                  opacity: [1, 1, 1, 0.7, 0],
+                  transition: {
+                    duration: 3.2, // Slow, majestic opening motion
+                    ease: [0.16, 1, 0.3, 1],
+                  },
+                }
+              : { rotateY: 0, x: '0%', opacity: 1 }
+          }
+          className="absolute inset-y-0 left-0 w-1/2 overflow-hidden bg-[#240A10] border-r border-[#E0BC62] shadow-[8px_0_35px_rgba(0,0,0,0.85)] z-20"
+        >
+          {/* Deep Burgundy Velvet Texture with Embroidered Floral Vines */}
+          <img
+            src={burgundyDoorImg}
+            alt="Left Door Velvet Texture"
+            className="absolute inset-0 w-full h-full object-cover object-left"
           />
 
-          {/* Golden Volumetric Light Pulses (Steps 2, 3, 4, 5) */}
-          <motion.div
-            animate={{
-              scale:
-                pulseCount === 1
-                  ? [1, 1.25, 1.1]
-                  : pulseCount === 2
-                  ? [1.1, 1.45, 1.25]
-                  : pulseCount === 3
-                  ? [1.25, 1.7, 1.4]
-                  : isFlapOpen
-                  ? [1.4, 2.3]
-                  : 1,
-              opacity:
-                isPulsing || isGlowing || isFlapOpen
-                  ? pulseCount === 1
-                    ? 0.45
-                    : pulseCount === 2
-                    ? 0.7
-                    : 0.95
-                  : 0.05,
-            }}
-            transition={{ duration: 0.7, ease: 'easeInOut' }}
-            className="w-[450px] sm:w-[600px] h-[450px] sm:h-[600px] rounded-full bg-[radial-gradient(circle,_rgba(255,238,170,0.85)_0%,_rgba(212,175,55,0.45)_35%,_rgba(153,101,21,0.15)_65%,_transparent_75%)] blur-2xl"
-          />
+          {/* Velvet Wine Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30 pointer-events-none" />
 
-          {/* Step 12 & 16: Rising golden dust particles */}
-          {(animStage === 'flap_opening' || animStage === 'card_emerging') && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              {Array.from({ length: 24 }).map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{
-                    x: Math.random() * window.innerWidth,
-                    y: window.innerHeight * 0.6 + Math.random() * 100,
-                    opacity: 0,
-                    scale: 0.5,
-                  }}
-                  animate={{
-                    y: window.innerHeight * 0.2 - Math.random() * 200,
-                    opacity: [0, 0.9, 0],
-                    scale: [0.5, 1.4, 0.2],
-                  }}
-                  transition={{
-                    duration: 2.2 + Math.random() * 1.5,
-                    repeat: Infinity,
-                    delay: Math.random() * 0.8,
-                  }}
-                  className="absolute w-2 h-2 rounded-full bg-gradient-to-tr from-[#FFF2B2] to-[#D4AF37] shadow-[0_0_10px_rgba(212,175,55,0.8)]"
-                />
-              ))}
+          {/* Outer Golden Border Filigree */}
+          <div className="absolute inset-2 sm:inset-4 border-2 border-[#D4AF37]/70 pointer-events-none rounded-l-xl" />
+          <div className="absolute inset-3 sm:inset-6 border border-[#FFE28A]/40 pointer-events-none rounded-l-lg" />
+
+          {/* Vertical Center Gold Trim Strip */}
+          <div className="absolute inset-y-0 right-0 w-3.5 bg-gradient-to-r from-[#996515] via-[#FFE28A] to-[#C59A3F] border-l border-[#805010] shadow-[0_0_12px_rgba(212,175,55,0.4)] pointer-events-none" />
+
+          {/* Left Half of Medallion when parting */}
+          {isDoorsOpening && (
+            <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 pointer-events-none">
+              <div className="w-24 h-32 sm:w-28 sm:h-36 rounded-full border-2 border-[#FFE28A] bg-gradient-to-b from-[#8C5E1B] via-[#4A2F0A] to-[#201006] shadow-2xl flex items-center justify-center overflow-hidden">
+                <div className="w-full h-full border border-[#D4AF37]/50 rounded-full flex flex-col items-center justify-center p-1 text-center">
+                  <span className="text-[#FFE28A] text-xl sm:text-2xl font-bold font-cinzel-decorative">
+                    J
+                  </span>
+                </div>
+              </div>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {/* Envelope Container: Occupies prominent portion of mobile & desktop screens */}
-        <div className="relative w-full max-w-[460px] aspect-[4/3] sm:aspect-[1.35/1] flex flex-col items-center justify-center">
-          {/* Main Envelope Body */}
-          <motion.div
-            layout
-            animate={{
-              boxShadow: isGlowing
-                ? '0 30px 70px -10px rgba(0,0,0,0.7), 0 0 50px rgba(212,175,55,0.6)'
-                : '0 25px 60px -15px rgba(0,0,0,0.4), 0 0 30px rgba(200,162,81,0.15)',
-              borderColor: isGlowing ? '#E5C37A' : '#DECBB0',
-            }}
-            className="relative w-full h-full rounded-2xl bg-[#FAF6EE] border-2 shadow-2xl overflow-hidden"
-            style={{
-              backgroundImage:
-                'radial-gradient(#E8DFC8 0.75px, transparent 0.75px)',
-              backgroundSize: '14px 14px',
-            }}
-          >
-            {/* Step 8: Golden rim light on envelope edges */}
-            {isGlowing && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="absolute inset-0 border-2 border-[#FFE28A] rounded-2xl pointer-events-none shadow-[inset_0_0_20px_rgba(212,175,55,0.4)] z-20"
-              />
+        {/* ======================================================== */}
+        {/* 2. RIGHT DOOR PANEL (Slow, stately, majestic swing open) */}
+        {/* ======================================================== */}
+        <motion.div
+          style={{
+            transformOrigin: 'right center',
+            transformStyle: 'preserve-3d',
+          }}
+          animate={
+            isDoorsOpening
+              ? {
+                  rotateY: 118,
+                  x: '12%',
+                  opacity: [1, 1, 1, 0.7, 0],
+                  transition: {
+                    duration: 3.2, // Slow, majestic opening motion
+                    ease: [0.16, 1, 0.3, 1],
+                  },
+                }
+              : { rotateY: 0, x: '0%', opacity: 1 }
+          }
+          className="absolute inset-y-0 right-0 w-1/2 overflow-hidden bg-[#240A10] border-l border-[#E0BC62] shadow-[-8px_0_35px_rgba(0,0,0,0.85)] z-20"
+        >
+          {/* Deep Burgundy Velvet Texture Mirrored for Symmetrical Vines */}
+          <img
+            src={burgundyDoorImg}
+            alt="Right Door Velvet Texture"
+            className="absolute inset-0 w-full h-full object-cover object-right scale-x-[-1]"
+          />
+
+          {/* Velvet Wine Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-l from-black/50 via-transparent to-black/30 pointer-events-none" />
+
+          {/* Outer Golden Border Filigree */}
+          <div className="absolute inset-2 sm:inset-4 border-2 border-[#D4AF37]/70 pointer-events-none rounded-r-xl" />
+          <div className="absolute inset-3 sm:inset-6 border border-[#FFE28A]/40 pointer-events-none rounded-r-lg" />
+
+          {/* Vertical Center Gold Trim Strip */}
+          <div className="absolute inset-y-0 left-0 w-3.5 bg-gradient-to-r from-[#C59A3F] via-[#FFE28A] to-[#996515] border-r border-[#805010] shadow-[0_0_12px_rgba(212,175,55,0.4)] pointer-events-none" />
+
+          {/* Right Half of Medallion when parting */}
+          {isDoorsOpening && (
+            <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 pointer-events-none">
+              <div className="w-24 h-32 sm:w-28 sm:h-36 rounded-full border-2 border-[#FFE28A] bg-gradient-to-b from-[#8C5E1B] via-[#4A2F0A] to-[#201006] shadow-2xl flex items-center justify-center overflow-hidden">
+                <div className="w-full h-full border border-[#D4AF37]/50 rounded-full flex flex-col items-center justify-center p-1 text-center">
+                  <span className="text-[#FFE28A] text-xl sm:text-2xl font-bold font-cinzel-decorative">
+                    R
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </motion.div>
+
+        {/* ======================================================== */}
+        {/* 3. CENTRAL INTERACTIVE LOCK BUTTON & LIGHT TRAVEL BEAM   */}
+        {/* ======================================================== */}
+        {!isDoorsOpening && (
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center justify-center pointer-events-auto">
+            {/* SMOOTH TRAVELING LIGHT AT MEDIUM SPEED (orbits 360° around the button) */}
+            {isLightOrbiting && (
+              <>
+                {/* Rotating Luminous Light Head & Comet Tail */}
+                <motion.div
+                  initial={{ rotate: 0 }}
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 1.5,
+                    ease: 'easeInOut',
+                  }}
+                  className="absolute w-36 h-44 sm:w-40 sm:h-48 rounded-full pointer-events-none z-40 flex items-center justify-center"
+                >
+                  {/* Golden Laser Spark Orb */}
+                  <div
+                    className="absolute -top-3 w-6 h-6 rounded-full bg-white shadow-[0_0_22px_7px_#FFE885,0_0_40px_14px_#D4AF37]"
+                    style={{ filter: 'blur(0.5px)' }}
+                  />
+                  {/* Luminous Comet Tail around oval perimeter */}
+                  <div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background:
+                        'conic-gradient(from 0deg, rgba(255,255,255,0.95) 0deg, rgba(255,232,133,0.75) 45deg, rgba(212,175,55,0.3) 90deg, transparent 140deg)',
+                      maskImage:
+                        'radial-gradient(circle, transparent 66%, black 67%)',
+                      WebkitMaskImage:
+                        'radial-gradient(circle, transparent 66%, black 67%)',
+                    }}
+                  />
+                </motion.div>
+
+                {/* Golden Radiant Shockwave on Orbit Completion */}
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0.8 }}
+                  animate={{ scale: 1.6, opacity: 0 }}
+                  transition={{ duration: 1.5, ease: 'easeOut' }}
+                  className="absolute inset-0 rounded-full border-2 border-[#FFE885] shadow-[0_0_40px_#FFE885] pointer-events-none"
+                />
+              </>
             )}
 
-            {/* Fine Botanical Line-Art & Arabesque Watermark */}
-            <div className="absolute inset-0 opacity-25 pointer-events-none">
-              <svg
-                className="w-full h-full"
-                viewBox="0 0 440 330"
-                fill="none"
-                stroke="#B8862D"
-                strokeWidth="0.85"
-              >
-                {/* Botanical corner flourishes */}
-                <path d="M 20 20 C 50 80, 80 50, 110 20 M 20 20 C 80 50, 50 80, 20 110" />
-                <path d="M 420 20 C 390 80, 360 50, 330 20 M 420 20 C 360 50, 390 80, 420 110" />
-                <path d="M 20 310 C 50 250, 80 280, 110 310 M 20 310 C 80 280, 50 250, 20 220" />
-                <path d="M 420 310 C 390 250, 360 280, 330 310 M 420 310 C 360 280, 390 250, 420 220" />
-                {/* Central circular arabesque medallion */}
-                <circle cx="220" cy="165" r="105" strokeDasharray="4 4" />
-                <circle cx="220" cy="165" r="118" strokeWidth="0.6" />
-                <circle cx="220" cy="165" r="126" strokeDasharray="2 3" />
-              </svg>
-            </div>
+            {/* Pulsing Outer Shimmer Ring */}
+            <div
+              className={`absolute -inset-3 rounded-full border border-[#FFE28A]/50 transition-all duration-500 pointer-events-none ${
+                isLightOrbiting
+                  ? 'border-[#FFE885] shadow-[0_0_35px_rgba(255,232,133,0.95)] scale-105'
+                  : 'animate-pulse'
+              }`}
+            />
 
-            {/* Step 13 & 14: Emerging Handcrafted Card (Strictly NO DATES here!) */}
-            <motion.div
-              initial={false}
+            {/* Central Royal Oval Medallion Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.96 }}
               animate={
-                isCardEmerging
-                  ? { y: -160, scale: 1.05, opacity: 1 }
-                  : isFlapOpen
-                  ? { y: -50, scale: 1.01, opacity: 1 }
-                  : { y: 0, opacity: 0.95 }
+                isLightOrbiting
+                  ? {
+                      scale: [1, 1.08, 1.04],
+                      boxShadow: '0 0 50px rgba(255, 232, 133, 0.95)',
+                    }
+                  : {}
               }
-              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-x-5 top-5 bottom-5 bg-[#FFFDF9] rounded-xl border border-[#D4AF37]/60 shadow-inner p-6 flex flex-col items-center justify-center text-center z-10"
+              onClick={handleTapSeal}
+              className="relative w-24 h-32 sm:w-28 sm:h-36 rounded-full bg-gradient-to-b from-[#A06F24] via-[#6B420F] to-[#2B1607] border-3 border-[#FFE28A] p-2 flex flex-col items-center justify-center text-center cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.85),_inset_0_2px_10px_rgba(255,255,255,0.5)] transition-all group focus:outline-none select-none"
+              aria-label="Tap to unlock and open royal doors"
             >
-              <div className="font-amiri text-lg sm:text-xl text-[#996515] tracking-wide mb-1">
-                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-              </div>
-              <div className="text-[10px] tracking-[0.25em] text-[#8C6D3B] uppercase font-cinzel font-semibold mb-2">
-                The Wedding Celebration of
-              </div>
-              <h2 className="font-cinzel text-2xl sm:text-3xl font-bold tracking-tight text-[#3A291A]">
-                Javed Ansari
-              </h2>
-              <div className="my-1 text-[#C59A3F] font-cinzel-decorative text-lg">
-                &
-              </div>
-              <h2 className="font-cinzel text-2xl sm:text-3xl font-bold tracking-tight text-[#3A291A]">
-                Roshan Ansari
-              </h2>
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#C59A3F] to-transparent my-2" />
-              <p className="font-cormorant italic text-xs sm:text-sm text-[#665443]">
-                Cordially request the honour of your presence and heartfelt du’as
-              </p>
-            </motion.div>
+              {/* Inner Golden Rim Line */}
+              <div className="absolute inset-1.5 rounded-full border border-[#FFDF85]/60 pointer-events-none" />
 
-            {/* Triangular Side & Bottom Paper Folds (Handcrafted 3D layering) */}
-            <div className="absolute inset-0 pointer-events-none z-15">
-              {/* Bottom fold */}
-              <div
-                className="absolute bottom-0 inset-x-0 h-1/2 bg-[#F6EFE5] border-t border-[#DFCEAF] shadow-[0_-6px_16px_rgba(0,0,0,0.04)]"
-                style={{
-                  clipPath: 'polygon(0% 100%, 50% 36%, 100% 100%)',
-                }}
-              />
-              {/* Left fold */}
-              <div
-                className="absolute inset-y-0 left-0 w-1/2 bg-[#F8F2E8] border-r border-[#DFCEAF]"
-                style={{
-                  clipPath: 'polygon(0% 0%, 46% 50%, 0% 100%)',
-                }}
-              />
-              {/* Right fold */}
-              <div
-                className="absolute inset-y-0 right-0 w-1/2 bg-[#F8F2E8] border-l border-[#DFCEAF]"
-                style={{
-                  clipPath: 'polygon(100% 0%, 54% 50%, 100% 100%)',
-                }}
-              />
-            </div>
+              {/* Monogram Text */}
+              <div className="text-[9px] tracking-widest text-[#FFDF85] font-cinzel uppercase font-semibold">
+                NIKAH
+              </div>
 
-            {/* Step 11: Top Envelope Flap (Flips open in 3D) */}
-            <motion.div
-              initial={false}
-              animate={
-                isFlapOpen
-                  ? { rotateX: 180, zIndex: 5 }
-                  : { rotateX: 0, zIndex: 25 }
-              }
-              transition={{ duration: 1.1, ease: [0.4, 0, 0.2, 1] }}
-              style={{
-                transformOrigin: 'top center',
-                perspective: '1200px',
-              }}
-              className="absolute top-0 inset-x-0 h-3/5 bg-gradient-to-b from-[#ECE1CD] to-[#FAF6EE] border-b border-[#D5C29E] shadow-[0_12px_28px_rgba(0,0,0,0.1)]"
-            >
-              <div
-                className="w-full h-full bg-[#FAF5EB] border-b border-[#D5C29E]"
-                style={{
-                  clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)',
+              <div className="font-cinzel-decorative text-xl sm:text-2xl font-bold tracking-widest text-[#FFF8E1] drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] my-0.5 sm:my-1">
+                J & R
+              </div>
+
+              <div className="w-8 h-px bg-[#FFDF85]/60 my-0.5" />
+
+              <div className="text-[8px] sm:text-[9px] tracking-[0.25em] text-[#FFE8A3] font-cinzel uppercase font-bold">
+                OPEN
+              </div>
+
+              {/* Gloss Light Reflection on Wax Button */}
+              <div className="absolute top-2 left-3 w-8 h-4 rounded-full bg-white/30 blur-[1px] -rotate-30 pointer-events-none" />
+            </motion.button>
+
+            {/* Pulsing prompt badge beneath button */}
+            {animStage === 'idle' && (
+              <motion.div
+                animate={{ y: [0, 4, 0] }}
+                transition={{
+                  duration: 2.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
                 }}
+                className="absolute -bottom-11 whitespace-nowrap flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#18080C]/90 border border-[#D4AF37]/70 shadow-lg text-[#FFE8A3] font-cinzel text-[10px] sm:text-xs tracking-wider uppercase font-semibold pointer-events-none"
               >
-                {/* Gold foil hairline ornament along flap edge */}
-                <svg
-                  className="w-full h-full"
-                  viewBox="0 0 440 200"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d="M 12 4 L 220 188 L 428 4"
-                    fill="none"
-                    stroke="#D4AF37"
-                    strokeWidth="1.5"
-                    strokeDasharray="4 2"
-                    opacity="0.8"
-                  />
-                  <path
-                    d="M 22 4 L 220 180 L 418 4"
-                    fill="none"
-                    stroke="#C59A3F"
-                    strokeWidth="0.8"
-                    opacity="0.5"
-                  />
-                </svg>
-              </div>
-            </motion.div>
-
-            {/* Steps 6, 7, 9, 10: J & R WAX SEAL (Central Interactive Monogram Button) */}
-            <AnimatePresence>
-              {animStage !== 'complete' && (
-                <motion.div
-                  initial={{ scale: 1 }}
-                  animate={
-                    animStage === 'seal_cracking'
-                      ? {
-                          scale: [1, 1.12, 0.92],
-                          rotate: [0, -6, 6, 0],
-                          filter: 'drop-shadow(0 0 20px rgba(255,220,100,0.9))',
-                        }
-                      : isGlowing
-                      ? {
-                          scale: [1, 1.08, 1.04],
-                          filter: 'drop-shadow(0 0 25px rgba(212,175,55,0.85))',
-                        }
-                      : isFlapOpen
-                      ? { scale: 0, opacity: 0 }
-                      : { scale: 1 }
-                  }
-                  exit={{ scale: 0, opacity: 0 }}
-                  transition={{ duration: 0.6 }}
-                  onClick={handleTapSeal}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') handleTapSeal();
-                  }}
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 cursor-pointer group select-none focus:outline-none"
-                  aria-label="Tap J & R wax seal to open invitation"
-                >
-                  {/* Outer Wax Droplet 3D Body */}
-                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full wax-seal flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-105 active:scale-95">
-                    {/* Golden edge shimmer rim */}
-                    <div className="absolute inset-0 rounded-full border-2 border-[#FFE8A3]/70 shadow-[0_0_20px_rgba(212,175,55,0.5)]" />
-
-                    {/* Inner Wax Medallion with Intertwined J & R */}
-                    <div className="w-full h-full rounded-full border border-[#4D3008] flex flex-col items-center justify-center text-center bg-gradient-to-b from-[#B8862D] via-[#8C5E1B] to-[#55360B] p-2 shadow-inner">
-                      <div className="text-[9px] tracking-widest text-[#FFDF85]/80 font-cinzel font-semibold">
-                        NIKAH
-                      </div>
-                      {/* Intertwined J & R Monogram */}
-                      <div className="font-cinzel-decorative font-bold text-2xl sm:text-3xl tracking-widest text-[#FFF7D9] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] my-0.5">
-                        J & R
-                      </div>
-                      <div className="w-10 h-px bg-[#FFDF85]/40 my-0.5" />
-                      <div className="text-[8px] tracking-[0.25em] text-[#FFDF85]/90 font-cinzel">
-                        MUGHAL
-                      </div>
-                    </div>
-
-                    {/* Subtle wax reflection gloss */}
-                    <div className="absolute top-2.5 left-4 w-9 h-4 rounded-full bg-white/25 blur-[1px] rotate-[-35deg] pointer-events-none" />
-
-                    {/* Step 10: Falling wax particles on crack */}
-                    {animStage === 'seal_cracking' && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        {Array.from({ length: 8 }).map((_, i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-                            animate={{
-                              x: (Math.random() - 0.5) * 60,
-                              y: Math.random() * 50 + 20,
-                              opacity: 0,
-                              scale: 0.3,
-                            }}
-                            transition={{ duration: 0.5 }}
-                            className="absolute w-2 h-2 rounded-full bg-[#B8862D] shadow-xs"
-                            style={{ left: '50%', top: '50%' }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Pulsing prompt badge beneath seal */}
-                  {animStage === 'idle' && (
-                    <motion.div
-                      animate={{ y: [0, 4, 0] }}
-                      transition={{
-                        duration: 2.2,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }}
-                      className="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap flex items-center gap-1.5 text-xs font-cinzel font-medium tracking-wide text-[#FAF7F2] bg-[#2D241E]/95 px-4 py-1.5 rounded-full border border-[#D4AF37]/50 shadow-xl pointer-events-none"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] animate-spin" />
-                      <span>Tap J & R seal to open</span>
-                    </motion.div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          {/* Envelope Bottom Caption (No wedding date) */}
-          <div className="mt-8 text-center text-[#E8DFC8]/80 text-xs font-cormorant italic tracking-wider">
-            Handcrafted with love for the union of Javed Ansari & Roshan Ansari
+                <Sparkles className="w-3.5 h-3.5 text-[#FFE8A3] animate-spin" />
+                <span>Tap to open doors</span>
+              </motion.div>
+            )}
           </div>
+        )}
+
+        {/* Golden Light Burst from Center Seam when doors open */}
+        {isDoorsOpening && (
+          <motion.div
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: [0, 1, 0], scaleX: [0, 6, 1] }}
+            transition={{ duration: 1.8, ease: 'easeOut' }}
+            className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-12 bg-gradient-to-r from-transparent via-[#FFF4D0] to-transparent pointer-events-none z-30 blur-sm"
+          />
+        )}
+
+        {/* Direct Skip Button at Bottom */}
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30">
+          <button
+            onClick={handleSkipDirectly}
+            className="text-[11px] font-cinzel text-[#FFE28A]/80 hover:text-[#FFF4D0] hover:underline underline-offset-4 tracking-widest uppercase transition-colors"
+          >
+            Directly Enter Website →
+          </button>
         </div>
       </motion.div>
     </AnimatePresence>

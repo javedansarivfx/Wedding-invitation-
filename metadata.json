@@ -1,0 +1,6 @@
+{
+  "name": "Javed & Roshan — Royal Nikah Invitation",
+  "description": "A high-end, premium interactive Muslim Nikah wedding invitation for Javed Ansari & Roshan Ansari.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
